@@ -30,12 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.26.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.3.6" />
-    <PackageReference Include="System.Formats.Asn1" Version="9.0.10" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
