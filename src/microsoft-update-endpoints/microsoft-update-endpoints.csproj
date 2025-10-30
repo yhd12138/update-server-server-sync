@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Microsoft.PackageGraph.MicrosoftUpdate.Endpoints</RootNamespace>
     <AssemblyName>package-graph-endpoints-microsoft-update</AssemblyName>
     <PackageId>Microsoft.PackageGraph.MicrosoftUpdate.Endpoints</PackageId>
