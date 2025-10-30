@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.PackageGraph.MicrosoftUpdate.Metadata;
+using Microsoft.PackageGraph.ObjectModel;
+using Microsoft.PackageGraph.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Microsoft.PackageGraph.MicrosoftUpdate.Metadata;
-using Microsoft.PackageGraph.ObjectModel;
-using Microsoft.PackageGraph.Storage;
 
 namespace Microsoft.PackageGraph.MicrosoftUpdate.Source
 {
@@ -50,7 +50,7 @@ namespace Microsoft.PackageGraph.MicrosoftUpdate.Source
 
         private void RetrievePackageIdentities()
         {
-            lock(this)
+            lock (this)
             {
                 if (_Identities == null)
                 {
@@ -161,7 +161,7 @@ namespace Microsoft.PackageGraph.MicrosoftUpdate.Source
                     var retrievedPackages = _Client.GetUpdateDataForIds(batch.ToList());
                     destination.AddPackages(retrievedPackages);
 
-                    lock(progressArgs)
+                    lock (progressArgs)
                     {
                         progressArgs.Current += retrievedPackages.Count;
                         MetadataCopyProgress?.Invoke(this, progressArgs);

@@ -187,8 +187,8 @@ namespace Microsoft.PackageGraph.Storage.Azure
             {
                 return;
             }
-            
-            lock(Identities)
+
+            lock (Identities)
             {
                 var entry = Metadata.AddPackage(package);
 

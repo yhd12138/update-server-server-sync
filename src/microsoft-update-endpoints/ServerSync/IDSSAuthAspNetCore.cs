@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Threading.Tasks;
 using Microsoft.UpdateServices.WebServices.DssAuthentication;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace Microsoft.PackageGraph.MicrosoftUpdate.Endpoints.ServerSync
 {

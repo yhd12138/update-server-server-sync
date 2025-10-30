@@ -2,10 +2,7 @@
 // Licensed under the MIT License.
 
 using Microsoft.PackageGraph.MicrosoftUpdate.Index;
-using Microsoft.PackageGraph.Partitions;
 using Microsoft.PackageGraph.Storage.Index;
-using System;
-using System.Collections.Generic;
 
 namespace Microsoft.PackageGraph.MicrosoftUpdate
 {
@@ -16,7 +13,7 @@ namespace Microsoft.PackageGraph.MicrosoftUpdate
     {
         internal const string MicrosoftUpdatePartitionName = "MicrosoftUpdate";
 
-        internal static readonly MicrosoftUpdatePartition PartitionSingleton = new(); 
+        internal static readonly MicrosoftUpdatePartition PartitionSingleton = new();
 
         internal static readonly IndexDefinition DriverMetadata = new()
         {

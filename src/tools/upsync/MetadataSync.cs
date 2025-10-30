@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using Newtonsoft.Json;
-using System.Threading;
+using Microsoft.PackageGraph.MicrosoftUpdate.Metadata;
 using Microsoft.PackageGraph.MicrosoftUpdate.Source;
 using Microsoft.PackageGraph.Storage;
-using Microsoft.PackageGraph.MicrosoftUpdate.Metadata;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
 
 namespace Microsoft.PackageGraph.Utilitites.Upsync
 {
@@ -45,7 +45,7 @@ namespace Microsoft.PackageGraph.Utilitites.Upsync
                 return;
             }
 
-            using(sourceToUpdate)
+            using (sourceToUpdate)
             {
                 if (sourceToUpdate.IsMetadataIndexingSupported)
                 {
@@ -290,7 +290,7 @@ namespace Microsoft.PackageGraph.Utilitites.Upsync
         private static UpstreamSourceFilter CreateValidFilterFromOptions(FetchPackagesOptions options, IMetadataStore metadataSource)
         {
             List<Guid> productFilter = CreateFilterListForCategory<ProductCategory>(
-                options.ProductsFilter, 
+                options.ProductsFilter,
                 metadataSource);
 
             List<Guid> classificationFilter = CreateFilterListForCategory<ClassificationCategory>(

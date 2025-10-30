@@ -2,12 +2,12 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Microsoft.PackageGraph.MicrosoftUpdate.Compression
 {
@@ -197,8 +197,8 @@ namespace Microsoft.PackageGraph.MicrosoftUpdate.Compression
             textWriter.WriteLine(".Set MaxCabinetSize=0");
             textWriter.WriteLine(".Set MaxDiskFileCount=0");
             textWriter.WriteLine(".Set MaxDiskSize=0");
-            
-            foreach(var file in files)
+
+            foreach (var file in files)
             {
                 textWriter.WriteLine("\"{0}\"", file);
             }

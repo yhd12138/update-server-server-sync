@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
 using CommandLine;
-using Microsoft.PackageGraph.MicrosoftUpdate;
 using Microsoft.PackageGraph.Storage;
+using System;
 
 namespace Microsoft.PackageGraph.Utilitites.Upsync
 {
@@ -97,7 +96,7 @@ namespace Microsoft.PackageGraph.Utilitites.Upsync
 
         public static void OnPackageIndexingProgress(object sender, PackageStoreEventArgs e)
         {
-            lock(ProgressLock)
+            lock (ProgressLock)
             {
                 UpdateConsoleForMessageRefresh();
 

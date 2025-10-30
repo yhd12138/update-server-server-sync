@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.PackageGraph.MicrosoftUpdate.Index;
+using Microsoft.PackageGraph.MicrosoftUpdate.Metadata.Parsers;
+using Microsoft.PackageGraph.ObjectModel;
+using Microsoft.PackageGraph.Storage;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
-using System;
-using Microsoft.PackageGraph.MicrosoftUpdate.Index;
-using Microsoft.PackageGraph.ObjectModel;
-using Microsoft.PackageGraph.Storage;
-using Microsoft.PackageGraph.MicrosoftUpdate.Metadata.Parsers;
 
 namespace Microsoft.PackageGraph.MicrosoftUpdate.Metadata
 {

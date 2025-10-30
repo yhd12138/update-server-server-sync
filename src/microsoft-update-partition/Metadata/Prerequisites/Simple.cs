@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.PackageGraph.MicrosoftUpdate.Metadata;
 using System;
 
 namespace Microsoft.PackageGraph.MicrosoftUpdate.Metadata.Prerequisites

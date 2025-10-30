@@ -1,19 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Logging;
-using SoapCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using System.Reflection;
-using Microsoft.UpdateServices.WebServices.ServerSync;
-using Newtonsoft.Json;
-using System.IO;
+using Microsoft.Extensions.Logging;
 using Microsoft.PackageGraph.Storage;
 using Microsoft.PackageGraph.Storage.Local;
+using Microsoft.UpdateServices.WebServices.ServerSync;
+using Newtonsoft.Json;
+using SoapCore;
+using System.Reflection;
 
 namespace Microsoft.PackageGraph.MicrosoftUpdate.Endpoints.ServerSync
 {
