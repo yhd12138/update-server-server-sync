@@ -63,8 +63,8 @@ namespace Microsoft.PackageGraph.MicrosoftUpdate.Source
 
             var httpBindingWithTimeout = new System.ServiceModel.BasicHttpBinding()
             {
-                ReceiveTimeout = new TimeSpan(0, 30, 0),
-                SendTimeout = new TimeSpan(0, 30, 0),
+                ReceiveTimeout = new TimeSpan(0, 10, 0),
+                SendTimeout = new TimeSpan(0, 10, 0),
                 MaxBufferSize = int.MaxValue,
                 ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max,
                 MaxReceivedMessageSize = int.MaxValue,
