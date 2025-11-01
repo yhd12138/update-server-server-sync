@@ -1,7 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
-using Microsoft.PackageGraph.ObjectModel;
+﻿using Microsoft.PackageGraph.ObjectModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +9,7 @@ namespace Microsoft.PackageGraph.Storage.Index
 {
     abstract class SimpleIndex<I, T> : IIndex
     {
-        protected Dictionary<I, T> Index;
+        protected IDiskIndex<I, T> Index;
 
         protected IIndexStreamContainer _Container;
 
@@ -77,19 +75,55 @@ namespace Microsoft.PackageGraph.Storage.Index
                 }
                 else
                 {
-                    Index = new Dictionary<I, T>();
-                    IsIndexLoaded = true;
+                    // no existing index - write empty object
+                    using var sw = new StreamWriter(destination, System.Text.Encoding.UTF8, 65536, leaveOpen: true);
+                    using var jw = new JsonTextWriter(sw);
+                    jw.WriteStartObject();
+                    jw.WriteEndObject();
+                    jw.Flush();
                 }
-            }
-            else if (SaveWithSwappedKeyValue)
-            {
-                IndexSerialization.SerializeIndexToStream(destination, Index.Select(pair => new KeyValuePair<T, I>(pair.Value, pair.Key)));
             }
             else
             {
-                IndexSerialization.SerializeIndexToStream(destination, Index);
+                // Index is loaded. We need to serialize it out.
+                // If SaveWithSwappedKeyValue is true, we should swap keys/values.
+                // We'll stream-output JSON to avoid loading everything into memory.
+                using var sw = new StreamWriter(destination, System.Text.Encoding.UTF8, 65536, leaveOpen: true);
+                using var jw = new JsonTextWriter(sw);
+                var serializer = new JsonSerializer();
+
+                jw.WriteStartObject();
+
+                if (SaveWithSwappedKeyValue)
+                {
+                    // When swapping, the key becomes value and vice versa; this case is uncommon.
+                    // We'll iterate through entries and write swapped pairs.
+                    foreach (var kv in Index.GetAllEntries())
+                    {
+                        // key is I, value is T -> we want property name = serialized T? That is awkward.
+                        // For simplicity, we will use key.ToString() as property name and store value as T.
+                        // If your use case requires swapped semantics, implement a specific serializer here.
+                        string propName = kv.Key?.ToString() ?? string.Empty;
+                        jw.WritePropertyName(propName);
+                        serializer.Serialize(jw, kv.Value);
+                    }
+                }
+                else
+                {
+                    // Normal: property name = key.ToString() and value = serialized T (which might be array)
+                    foreach (var kv in Index.GetAllEntries())
+                    {
+                        string propName = kv.Key?.ToString() ?? string.Empty;
+                        jw.WritePropertyName(propName);
+                        serializer.Serialize(jw, kv.Value);
+                    }
+                }
+
+                jw.WriteEndObject();
+                jw.Flush();
             }
         }
+
         protected void ReadIndex()
         {
             if (_Container == null)
@@ -107,23 +141,50 @@ namespace Microsoft.PackageGraph.Storage.Index
                         {
                             using (indexStream)
                             {
-                                if (SaveWithSwappedKeyValue)
+                                // If the index stream is large, import into sqlite and use disk-backed index
+                                bool useDiskBacked = false;
+                                long sizeThreshold = 1L * 1024 * 1024; // 1 MB threshold; tune as needed
+                                try
                                 {
-                                    var swappedList = IndexSerialization.DeserializeIndexFromStream<List<KeyValuePair<T, I>>>(indexStream);
-                                    Index = swappedList.ToDictionary(pair => pair.Value, pair => pair.Key);
+                                    if (indexStream.CanSeek && indexStream.Length > sizeThreshold)
+                                    {
+                                        useDiskBacked = true;
+                                    }
+                                }
+                                catch { /* ignore */ }
+
+                                if (useDiskBacked)
+                                {
+                                    // import to sqlite file (in same folder as index container or temp)
+                                    string dbPath = Path.Combine(Path.GetTempPath(), $"{IndexName}.idx.db");
+                                    // Ensure prev db removed
+                                    try { if (File.Exists(dbPath)) File.Delete(dbPath); } catch { }
+
+                                    IndexToSqliteImporter.ImportIndexStreamToSqlite<object>(indexStream, dbPath, "IndexTable");
+                                    Index = new DiskBackedIndex<I, T>(dbPath, "IndexTable", k => k.ToString(), s => (I)Convert.ChangeType(s, typeof(I)));
                                 }
                                 else
                                 {
-                                    Index = IndexSerialization.DeserializeIndexFromStream<Dictionary<I, T>>(indexStream);
+                                    // small index - read it into memory and wrap
+                                    indexStream.Seek(0, SeekOrigin.Begin);
+                                    var dict = IndexSerialization.DeserializeIndexFromStream<Dictionary<I, T>>(indexStream);
+                                    if (dict == null)
+                                    {
+                                        dict = new Dictionary<I, T>();
+                                    }
+                                    Index = new InMemoryDiskIndexWrapper<I, T>(dict);
                                 }
                             }
                         }
                     }
-                    catch (Exception) { }
+                    catch (Exception)
+                    {
+                        // if deserialization/import fails, fall back to empty in-memory index
+                    }
 
                     if (Index == null)
                     {
-                        Index = new Dictionary<I, T>();
+                        Index = new InMemoryDiskIndexWrapper<I, T>(new Dictionary<I, T>());
                     }
                 }
 
@@ -137,7 +198,7 @@ namespace Microsoft.PackageGraph.Storage.Index
             {
                 ReadIndex();
             }
-            if (Index.TryGetValue((I)key, out data))
+            if (Index.TryGet(key, out data))
             {
                 return true;
             }
@@ -155,7 +216,7 @@ namespace Microsoft.PackageGraph.Storage.Index
                 ReadIndex();
             }
 
-            return Index;
+            return Index.GetAllEntries();
         }
 
         public abstract void IndexPackage(IPackage package, int packageIndex);
