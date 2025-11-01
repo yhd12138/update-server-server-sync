@@ -106,7 +106,7 @@ namespace Microsoft.PackageGraph.MicrosoftUpdate.Source
             if (unavailableUpdates.Count > 0)
             {
                 var progressArgs = new PackageStoreEventArgs() { Total = unavailableUpdates.Count, Current = 0 };
-                var batches = CreateBatchedListFromFlatList(unavailableUpdates, 50);
+                var batches = CreateBatchedListFromFlatList(unavailableUpdates, 200);
 
                 MetadataCopyProgress?.Invoke(this, progressArgs);
                 batches.AsParallel().ForAll(batch =>
