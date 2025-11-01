@@ -10,8 +10,8 @@
     <Description></Description>
     <BaseOutputPath>..\..\..\out\upsync</BaseOutputPath>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <FileVersion>3.0.4.2</FileVersion>
-    <AssemblyVersion>3.0.4.2</AssemblyVersion>
+    <FileVersion>3.0.4.1</FileVersion>
+    <AssemblyVersion>3.0.4.1</AssemblyVersion>
     <ProductVersion>3.0.4.1</ProductVersion>
     <PlatformTarget>x64</PlatformTarget>
     <IncludeSymbols>False</IncludeSymbols>
